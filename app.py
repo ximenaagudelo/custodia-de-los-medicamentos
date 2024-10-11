@@ -1,47 +1,48 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, request, Response, session
+from flask_mysqldb import MySQL,MySQLdb
 
 app = Flask(__name__)
+
+app.config['MYSQL_HOST']='localhost'
+app.config['MYSQL_USER']='root'
+app.config['MYSQL_PASSWORD']=''
+app.config['MYSQL_DB']='custodiadelosmedicamentos'
+app.config['MYSQL_CURSORCLASS']='DictCursor'
+mysql=MySQL(app)
 
 @app.route('/')
 @app.route('/index.html')
 def home():
     return render_template('index.html')
 
-@app.route('/404.html')
-def not_found():
-    return render_template('404.html')
+@app.route('/login')
+def iniciosesion():
+    return render_template('login.html')
 
-@app.route('/about.html')
-def about():
-    return render_template('about.html')
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
 
-@app.route('/service.html')
-def service():
-    return render_template('service.html')
+#FUNCION DE LOGIN
+@app.route('/acceso-login', methods=["GET", "POST"])
+def login():
+    if request.method == "POST" and "txtUsuario" in request.form and "txtContrasena":
+        _usuario = request.form["txtUsuario"]
+        _contrasena = request.form["txtContrasena"]
 
-@app.route('/blog.html')
-def blog():
-    return render_template('blog.html')
+        cur=mysql.connection.cursor()
+        cur.execute('SELECT * FROM usuario WHERE Username = %s AND Contrasena =%s', (_usuario,_contrasena))
+        account=cur.fetchone()
 
-@app.route('/contact.html')
-def contact():
-    return render_template('contact.html')
+        if account:
+            session['logueado'] = True
+            session['Id_Usuario'] = account["Id_Usuario"]
 
-@app.route('/faq.html')
-def faq():
-    return render_template('faq.html')
-
-@app.route('/feature.html')
-def feature():
-    return render_template('feature.html')
-
-@app.route('/team.html')
-def team():
-    return render_template('team.html')
-
-@app.route('/testimonial.html')
-def testimonial():
-    return render_template('testimonial.html')
+            return render_template("admin.html")
+        
+        else:
+            return render_template('login.html')
 
 if __name__ == '__main__':
+    app.secret_key="custodia"
     app.run(debug=True)
