@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Paciente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Detalles del Paciente</h1>
+        <div class="mb-3">
+            <strong>ID:</strong> {{ paciente.Id_Paciente }}
+        </div>
+        <div class="mb-3">
+            <strong>Nombre:</strong> {{ paciente.Nombre }}
+        </div>
+        <div class="mb-3">
+            <strong>Documento:</strong> {{ paciente.Documento }}
+        </div>
+        <div class="mb-3">
+            <strong>Fecha de Nacimiento:</strong> {{ paciente.Fecha_Nacimiento }}
+        </div>
+        <div class="mb-3">
+            <strong>Historia Médica:</strong> {{ paciente.Historia_Medica if paciente.Historia_Medica else 'No disponible' }}
+        </div>
+        <div class="mb-3">
+            <strong>Enfermedades:</strong> {{ paciente.Enfermedades if paciente.Enfermedades else 'No disponible' }}
+        </div>
+        <div class="mb-3">
+            <strong>Medicamentos Actuales:</strong> {{ paciente.Medicamentos_Actuales if paciente.Medicamentos_Actuales else 'No disponible' }}
+        </div>
+        <a href="/medico" class="btn btn-secondary">Volver</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

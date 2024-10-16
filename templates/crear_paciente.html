@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Paciente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #5B86E5, #36D1DC);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            z-index: -1;
+            transition: transform 0.3s ease;
+        }
+
+        .form-container:hover:before {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn {
+            margin-top: 10px;
+            width: 48%;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        textarea {
+            resize: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Crear Paciente</h1>
+            <form method="POST">
+                <div class="form-group mb-4">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="documento">Documento</label>
+                    <input type="text" class="form-control" name="documento" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" name="fechaNacimiento" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="historiaMedica">Historia Médica</label>
+                    <textarea class="form-control" name="historiaMedica" rows="3"></textarea>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="enfermedades">Enfermedades</label>
+                    <textarea class="form-control" name="enfermedades" rows="3"></textarea>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="medicamentosActuales">Medicamentos Actuales</label>
+                    <textarea class="form-control" name="medicamentosActuales" rows="3"></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Crear Paciente</button>
+                    <a href="/medico" class="btn btn-secondary">Volver</a>
+                </div>
+     

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Paciente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Editar Paciente</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" name="nombre" value="{{ paciente.Nombre }}" required>
+            </div>
+            <div class="form-group">
+                <label for="documento">Documento</label>
+                <input type="text" class="form-control" name="documento" value="{{ paciente.Documento }}" required>
+            </div>
+            <div class="form-group">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" name="fechaNacimiento" value="{{ paciente.Fecha_Nacimiento }}" required>
+            </div>
+            <div class="form-group">
+                <label for="historiaMedica">Historia Médica</label>
+                <textarea class="form-control" name="historiaMedica">{{ paciente.Historia_Medica }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="enfermedades">Enfermedades</label>
+                <textarea class="form-control" name="enfermedades">{{ paciente.Enfermedades }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="medicamentosActuales">Medicamentos Actuales</label>
+                <textarea class="form-control" name="medicamentosActuales">{{ paciente.Medicamentos_Actuales }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Actualizar Paciente</button>
+        </form>
+        <a href="/medico" class="btn btn-secondary mt-3">Volver</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
