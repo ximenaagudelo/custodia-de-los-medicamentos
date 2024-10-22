@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Medicamento</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Editar Medicamento</h2>
+        <form action="" method="POST">
+            <div class="form-group">
+                <label for="nombre">Nombre del Medicamento:</label>
+                <input type="text" name="nombre" class="form-control" value="{{ medicamento.Nombre }}" required>
+            </div>
+            <div class="form-group">
+                <label for="laboratorio">Laboratorio:</label>
+                <input type="text" name="laboratorio" class="form-control" value="{{ medicamento.Laboratorio }}" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha_vencimiento">Fecha de Vencimiento:</label>
+                <input type="date" name="fecha_vencimiento" class="form-control" value="{{ medicamento.Fecha_vencimiento }}" required>
+            </div>
+            <div class="form-group">
+                <label for="tipo">Tipo:</label>
+                <input type="text" name="tipo" class="form-control" value="{{ medicamento.Tipo }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="/farmaceutico" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>
