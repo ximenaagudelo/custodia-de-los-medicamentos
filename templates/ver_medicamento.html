@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Medicamento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Detalles del Medicamento</h2>
+        <table class="table table-bordered">
+            <tr>
+                <th>Nombre:</th>
+                <td>{{ medicamento.Nombre }}</td>
+            </tr>
+            <tr>
+                <th>Laboratorio:</th>
+                <td>{{ medicamento.Laboratorio }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de Vencimiento:</th>
+                <td>{{ medicamento.Fecha_vencimiento }}</td>
+            </tr>
+            <tr>
+                <th>Tipo:</th>
+                <td>{{ medicamento.Tipo }}</td>
+            </tr>
+        </table>
+        <a href="/farmaceutico" class="btn btn-secondary">Volver</a>
+    </div>
+</body>
+</html>
