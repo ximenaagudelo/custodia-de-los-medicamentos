@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Usuario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Detalles del Usuario</h2>
+        <table class="table table-bordered">
+            <tr>
+                <th>Nombre:</th>
+                <td>{{ usuario.Nombre }}</td>
+            </tr>
+            <tr>
+                <th>Documento:</th>
+                <td>{{ usuario.Documento }}</td>
+            </tr>
+            <tr>
+                <th>Rol:</th>
+                <td>{{ usuario.Rol }}</td>
+            </tr>
+            <tr>
+                <th>Username:</th>
+                <td>{{ usuario.Username }}</td>
+            </tr>
+            <tr>
+                <th>Contraseña:</th>
+                <td>{{ usuario.Contrasena }}</td>
+            </tr>
+            <tr>
+                <th>Tarjeta profesional:</th>
+                <td>{{ usuario.Tarjeta_Profesional }}</td>
+            </tr>
+        </table>
+        <a href="/admin" class="btn btn-secondary">Volver</a>
+    </div>
+</body>
+</html>
