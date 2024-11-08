@@ -1,7 +1,9 @@
 from flask import Flask, render_template, redirect, request, session
 from flask_mysqldb import MySQL
+from datetime import datetime
 
 app = Flask(__name__)
+
 
 # Configuración de MySQL
 app.config['MYSQL_HOST'] = 'localhost'
@@ -31,7 +33,9 @@ def login():
         _contrasena = request.form["txtContrasena"]
 
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM usuario WHERE Username = %s AND Contrasena = %s', (_usuario, _contrasena))
+        
+        # El Username en la consulta ahora es sensible a mayúsculas y minúsculas
+        cur.execute('SELECT * FROM usuario WHERE BINARY Username = %s AND Contrasena = %s', (_usuario, _contrasena))
         account = cur.fetchone()
 
         if account:
@@ -41,16 +45,18 @@ def login():
 
             if account['Id_Rol'] == 1:  # Admin
                 return redirect('/admin')
-            if account['Id_Rol'] == 2:  # Médico
+            elif account['Id_Rol'] == 2:  # Médico
                 return redirect('/medico')
             elif account['Id_Rol'] == 3:  # Farmacéutico
                 return redirect('/farmaceutico')
-            elif  account['Id_Rol'] == 4:  # enfermero
+            elif account['Id_Rol'] == 4:  # Enfermero
                 return redirect('/enfermero')
             else:
                 return render_template("login.html")
         else:
-            return render_template('login.html')
+            # Si no se encuentra la cuenta, se pasa un mensaje de error
+            return render_template('login.html', error="Usuario o contraseña incorrectos.")
+    return render_template('login.html')
 
 ########### Ruta para médicos ###########
 @app.route('/medico')
@@ -151,6 +157,12 @@ def farmaceutico():
         cur.execute('SELECT * FROM medicamento')
         medicamentos = cur.fetchall()
         cur.close()
+        
+        # Agregar estado de vencimiento a cada medicamento
+        for medicamento in medicamentos:
+            fecha_vencimiento = medicamento['Fecha_vencimiento']
+            medicamento['vencido'] = fecha_vencimiento < datetime.now().date()
+        
         return render_template('farmaceutico.html', medicamentos=medicamentos)
     else:
         return redirect('/login')
@@ -177,6 +189,49 @@ def crear_medicamento():
         return render_template('crear_medicamento.html')
     else:
         return redirect('/login')
+
+# Ruta para crear una nueva prescripción
+@app.route('/crear-prescripcion/<int:id_paciente>', methods=["GET", "POST"])
+def crear_prescripcion(id_paciente):
+    if 'logueado' in session and session['Rol'] == 2:
+        if request.method == "POST":
+            fecha_prescripcion = datetime.now().strftime('%Y-%m-%d')
+            id_usuario = session['Id_Usuario']
+            motivo = request.form["motivo"]
+            medicamentos = request.form["medicamentos"]
+            dosis = request.form["dosis"]
+
+            cur = mysql.connection.cursor()
+            cur.execute('''
+                INSERT INTO prescripcion (Fecha, Id_Usuario, Id_Paciente, Motivo, Medicamentos, Dosis)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            ''', (fecha_prescripcion, id_usuario, id_paciente, motivo, medicamentos, dosis))
+            mysql.connection.commit()
+            cur.close()
+
+            return redirect('/medico')
+        return render_template('crear_prescripcion.html', id_paciente=id_paciente)
+    else:
+        return redirect('/login')
+
+# Ruta para ver la prescripción de un paciente
+@app.route('/ver-prescripcion/<int:id_paciente>')
+def ver_prescripcion(id_paciente):
+    if 'logueado' in session and session['Rol'] == 2:  # Verifica que el usuario sea médico
+        cur = mysql.connection.cursor()
+        # Obtener las prescripciones del paciente desde la base de datos
+        cur.execute('SELECT * FROM prescripcion WHERE Id_Paciente = %s', (id_paciente,))
+        prescripciones = cur.fetchall()
+        cur.close()
+
+        if prescripciones:
+            return render_template('ver_prescripcion.html', prescripciones=prescripciones, id_paciente=id_paciente)
+        else:
+            return "No hay prescripciones para este paciente.", 404
+    else:
+        return redirect('/login')
+
+
 
 # Ruta para ver detalles de un medicamento
 @app.route('/ver-medicamento/<int:codigo>')

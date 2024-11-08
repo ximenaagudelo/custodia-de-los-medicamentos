@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuarios</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Estilo personalizado para el menú desplegable */
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .form-control.custom-select {
+            appearance: none;
+            padding-right: 2.5rem;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            color: #495057;
+        }
+
+        /* Flecha en el menú desplegable */
+        .custom-select-wrapper::after {
+            content: "▼";
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            color: #495057;
+            pointer-events: none;
+        }
+
+        /* Estilos adicionales para etiquetas y botones */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #007bff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -20,7 +61,14 @@
             </div>
             <div class="form-group">
                 <label for="rol">Rol del Usuario:</label>
-                <input type="text" name="rol" class="form-control" value="{{ usuario.Rol }}" required>
+                <div class="custom-select-wrapper">
+                    <select class="form-control custom-select" name="rol" required>
+                        <option value="1" {% if usuario.Id_Rol == 1 %}selected{% endif %}>Admin</option>
+                        <option value="2" {% if usuario.Id_Rol == 2 %}selected{% endif %}>Médico</option>
+                        <option value="3" {% if usuario.Id_Rol == 3 %}selected{% endif %}>Farmacéutico</option>
+                        <option value="4" {% if usuario.Id_Rol == 4 %}selected{% endif %}>Enfermero</option>
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label for="username">Username del Usuario:</label>
@@ -38,5 +86,8 @@
             <a href="/admin" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

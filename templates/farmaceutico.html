@@ -47,6 +47,13 @@
         .action-btns a {
             margin-right: 5px;
         }
+
+        /* Estilo para el mensaje de vencido */
+        .vencido {
+            color: red;
+            font-weight: bold;
+            margin-left: 5px;
+        }
     </style>
 </head>
 
@@ -81,9 +88,14 @@
             </thead>
             <tbody>
                 {% for medicamento in medicamentos %}
-                <tr>
+                <tr {% if medicamento.vencido %}style="background-color: #f8d7da;"{% endif %}>
                     <td>{{ medicamento.Codigo }}</td>
-                    <td>{{ medicamento.Nombre }}</td>
+                    <td>
+                        {{ medicamento.Nombre }}
+                        {% if medicamento.vencido %}
+                        <span class="vencido">Vencido</span>
+                        {% endif %}
+                    </td>
                     <td class="action-btns">
                         <a href="/ver-medicamento/{{ medicamento.Codigo }}" class="btn btn-info">
                             <i class="fas fa-info-circle"></i> Info
