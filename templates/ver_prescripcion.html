@@ -110,7 +110,7 @@
         {% endif %}
 
         <div class="text-center">
-            <a href="{{ url_for('medico') }}" class="btn btn-back">
+            <a href="{% if user_role == 'medico' %}{{ url_for('medico') }}{% elif user_role == 'enfermero' %}{{ url_for('enfermero') }}{% endif %}" class="btn btn-back">
                 Volver a la lista de pacientes
             </a>
         </div>

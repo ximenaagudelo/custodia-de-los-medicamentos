@@ -115,9 +115,7 @@
                     <td>{{ paciente.Documento }}</td>
                     <td class="action-btns">
                         <a href="/ver-paciente/{{ paciente.Id_Paciente }}" class="btn btn-info"><i class="fas fa-info-circle"></i> Info</a>
-                        <a href="/registrar-dosis/{{ paciente.Id_Paciente }}" class="btn btn-warning"><i class="fas fa-syringe"></i> Registrar dosis</a>
                         <a href="/consultar-guia/{{ paciente.Id_Paciente }}" class="btn btn-warning"><i class="fas fa-book"></i> Consultar guía</a>
-                        <a href="/consultar-inventario/{{ paciente.Id_Paciente }}" class="btn btn-warning"><i class="fas fa-box"></i> Consultar inventario</a>
                     </td>
                 </tr>
                 {% endfor %}

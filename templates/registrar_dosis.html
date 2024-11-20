@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Dosis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Registrar Dosis para {{ paciente.Nombre }}</h2>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label for="dosis" class="form-label">Dosis</label>
+                <input type="text" id="dosis" name="dosis" class="form-control" 
+                       value="{{ dosis.Dosis if dosis else '' }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="/enfermero" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>

@@ -4,7 +4,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-
 # Configuración de MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -22,8 +21,6 @@ def home():
 @app.route('/login')
 def iniciosesion():
     return render_template('login.html')
-
-
 
 # FUNCION DE LOGIN
 @app.route('/acceso-login', methods=["GET", "POST"])
@@ -122,16 +119,20 @@ def editar_paciente(id):
     else:
         return redirect('/login')
 
-# Ruta para ver detalles de un paciente
 @app.route('/ver-paciente/<int:id>')
 def ver_paciente(id):
-    if 'logueado' in session and session['Rol'] == 2:
+    if 'logueado' in session and (session['Rol'] == 2 or session['Rol'] == 4):  # Permitir acceso a médicos y enfermeros
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM paciente WHERE Id_Paciente = %s', (id,))
         paciente = cur.fetchone()
         cur.close()
+
         if paciente:
-            return render_template('ver_paciente.html', paciente=paciente)
+            # Determinar el rol del usuario
+            user_role = 'medico' if session['Rol'] == 2 else 'enfermero'
+            
+            # Pasar el rol al template junto con los datos del paciente
+            return render_template('ver_paciente.html', paciente=paciente, user_role=user_role)
         else:
             return "Paciente no encontrado", 404
     else:
@@ -225,13 +226,36 @@ def ver_prescripcion(id_paciente):
         cur.close()
 
         if prescripciones:
-            return render_template('ver_prescripcion.html', prescripciones=prescripciones, id_paciente=id_paciente)
+            # Determinar el rol del usuario
+            user_role = 'medico' if session['Rol'] == 2 else 'enfermero'
+            
+            # Pasar el rol al template junto con las prescripciones
+            return render_template('ver_prescripcion.html', prescripciones=prescripciones, id_paciente=id_paciente, user_role=user_role)
         else:
             return "No hay prescripciones para este paciente.", 404
     else:
         return redirect('/login')
 
+# Nueva Ruta para Consultar Guía (accesible por Médico y Enfermero)
+@app.route('/consultar-guia/<int:id_paciente>')
+def consultar_guia(id_paciente):
+    if 'logueado' in session and (session['Rol'] == 2 or session['Rol'] == 4):  # Permitir acceso a médicos y enfermeros
+        cur = mysql.connection.cursor()
+        # Obtener las prescripciones del paciente desde la base de datos
+        cur.execute('SELECT * FROM prescripcion WHERE Id_Paciente = %s', (id_paciente,))
+        prescripciones = cur.fetchall()
+        cur.close()
 
+        if prescripciones:
+            # Determinar el rol del usuario
+            user_role = 'medico' if session['Rol'] == 2 else 'enfermero'
+            
+            # Pasar el rol al template junto con las prescripciones
+            return render_template('ver_prescripcion.html', prescripciones=prescripciones, id_paciente=id_paciente, user_role=user_role)
+        else:
+            return "No hay prescripciones para este paciente.", 404
+    else:
+        return redirect('/login')
 
 # Ruta para ver detalles de un medicamento
 @app.route('/ver-medicamento/<int:codigo>')
@@ -286,7 +310,6 @@ def eliminar_medicamento(codigo):
         return redirect('/farmaceutico')
     else:
         return redirect('/login')
-    
 
 ########### Ruta para administrador ###########
 @app.route('/admin')
@@ -328,10 +351,8 @@ def crear_usuario():
         return render_template('crear_usuario.html')
     else:
         return redirect('/login')
-    
 
-
-#Ruta para editar usuario
+# Ruta para editar usuario
 @app.route('/editar-usuario/<int:id>', methods=["GET", "POST"])
 def editar_usuario(id):
     if 'logueado' in session and session['Rol'] == 1:
@@ -368,7 +389,6 @@ def editar_usuario(id):
     else:
         return redirect('/login')
 
-
 # Ruta para ver detalles de un usuario
 @app.route('/ver-usuario/<int:id>')
 def ver_usuario(id):
@@ -381,7 +401,6 @@ def ver_usuario(id):
         if usuario:
             return render_template('ver_usuario.html', usuario=usuario)  # Pasamos el usuario al template
         else:
-            
             return redirect('/admin')  # Redirigimos al panel de admin
     else:
         return redirect('/login')
@@ -395,6 +414,50 @@ def eliminar_usuario(id):
         mysql.connection.commit()
         cur.close()
         return redirect('/admin')
+    else:
+        return redirect('/login')
+    
+
+@app.route('/registrar-dosis/<int:id_paciente>', methods=["GET", "POST"])
+def registrar_dosis(id_paciente):
+    if 'logueado' in session and session['Rol'] == 4:  # Verifica que sea un enfermero
+        cur = mysql.connection.cursor()
+
+        if request.method == "POST":
+            dosis = request.form["dosis"]
+            fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+            # Verifica si ya hay una dosis registrada para este paciente
+            cur.execute('SELECT * FROM dosis WHERE Id_Paciente = %s', (id_paciente,))
+            registro = cur.fetchone()
+
+            if registro:
+                # Actualizar dosis existente
+                cur.execute('''
+                    UPDATE dosis
+                    SET Dosis = %s, Fecha = %s
+                    WHERE Id_Paciente = %s
+                ''', (dosis, fecha, id_paciente))
+            else:
+                # Insertar nueva dosis
+                cur.execute('''
+                    INSERT INTO dosis (Id_Paciente, Dosis, Fecha)
+                    VALUES (%s, %s, %s)
+                ''', (id_paciente, dosis, fecha))
+
+            mysql.connection.commit()
+            cur.close()
+            return redirect('/enfermero')
+        else:
+            # Obtener datos del paciente y la dosis si existe
+            cur.execute('SELECT * FROM paciente WHERE Id_Paciente = %s', (id_paciente,))
+            paciente = cur.fetchone()
+
+            cur.execute('SELECT * FROM dosis WHERE Id_Paciente = %s', (id_paciente,))
+            dosis = cur.fetchone()
+            cur.close()
+
+            return render_template('registrar_dosis.html', paciente=paciente, dosis=dosis)
     else:
         return redirect('/login')
 
@@ -414,4 +477,4 @@ def enfermero():
 
 if __name__ == '__main__':
     app.secret_key = "custodia"
-    app.run(debug=True)
+    app.run(debug=True) 
